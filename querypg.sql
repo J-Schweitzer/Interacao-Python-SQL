@@ -29,3 +29,29 @@ CREATE TABLE item_venda (
     FOREIGN KEY (venda_id) REFERENCES venda(id),
     FOREIGN KEY (produto_cod) REFERENCES produto(cod)
 );
+
+insert into cliente values (
+	1,
+	'Luan',
+	'67 991561505'
+);
+
+insert into cliente values (
+	2,
+	'Jorge',
+	'67 97458475'
+);
+
+insert into produto values (
+	1,
+	'Arroz 5Kg',
+	45.00,
+	87
+);
+
+insert into produto values (
+	2,
+	'Feijao 1kg',
+	21.00,
+	41
+);
