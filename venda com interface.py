@@ -4,7 +4,7 @@ from tkinter import ttk
 import psycopg2
 
 # Conexão com o banco de dados
-conn = psycopg2.connect(host='localhost', port='5432', database='Mercado', user='postgres', password='---')
+conn = psycopg2.connect(host='localhost', port='5433', database='Mercado', user='postgres', password='ucdb')
 
 def close_connection():
     conn.close()
@@ -55,7 +55,7 @@ def limpar_campos_produto():
 def limpar_campos_venda():
     entry_venda_cliente_cod.delete(0, tk.END)
     entry_venda_data.delete(0, tk.END)
-    entry_venda_pagamento.delete(0, tk.END)
+    combobox_pagamento.delete(0, tk.END)
     lista_produtos.clear()
     for row in tree.get_children():
         tree.delete(row)
@@ -149,6 +149,34 @@ def interface_produto(aba):
     ttk.Button(aba, text="Cadastrar Produto", command=cadastrar_produto).grid(row=5, columnspan=2, pady=10)
 
 def interface_venda(aba):
+    def atualizar_parcelas(event):
+        """Habilita ou desabilita a seleção de parcelas dependendo do tipo de pagamento."""
+        if combobox_pagamento.get() == "Credito":
+            combobox_parcelas.configure(state="readonly")
+            combobox_parcelas.set("1")  # Define o padrão para 1 parcela
+            atualizar_valor_parcela()  # Atualiza o valor da parcela
+        else:
+            combobox_parcelas.configure(state="disabled")
+            combobox_parcelas.set("")
+            label_valor_parcela.configure(text="Valor da Parcela: -")
+
+    def atualizar_valor_parcela(event=None):
+        """Atualiza o valor da parcela com base no total da venda e nas parcelas selecionadas."""
+        if combobox_pagamento.get() == "Credito":
+            try:
+                total_venda = calcular_total_venda()
+                num_parcelas = int(combobox_parcelas.get())
+                valor_parcela = total_venda / num_parcelas
+                label_valor_parcela.configure(text=f"Valor da Parcela: R$ {valor_parcela:.2f}")
+            except (ValueError, ZeroDivisionError):
+                label_valor_parcela.configure(text="Valor da Parcela: -")
+        else:
+            label_valor_parcela.configure(text="Valor da Parcela: -")
+
+    def calcular_total_venda():
+        """Calcula o total da venda com base nos produtos adicionados."""
+        return sum(item["total"] for item in lista_produtos)
+
     tk.Label(aba, text="Registro de Vendas", font=("Arial", 12, "bold")).grid(row=0, columnspan=2, pady=(0, 10))
 
     # Código do cliente
@@ -164,24 +192,38 @@ def interface_venda(aba):
     entry_venda_data.grid(row=2, column=1, padx=5, pady=5)
 
     # Tipo de pagamento
-    tk.Label(aba, text="Tipo de Pagamento (à vista, cartão, etc.):").grid(row=3, column=0, sticky="e")
-    global entry_venda_pagamento
-    entry_venda_pagamento = ttk.Entry(aba)
-    entry_venda_pagamento.grid(row=3, column=1, padx=5, pady=5)
+    tk.Label(aba, text="Tipo de Pagamento:").grid(row=3, column=0, sticky="e")
+    global combobox_pagamento
+    combobox_pagamento = ttk.Combobox(aba, values=["Debito", "Credito"], state="readonly")
+    combobox_pagamento.grid(row=3, column=1, padx=5, pady=5)
+    combobox_pagamento.set("Debito")  # Define um valor padrão
+    combobox_pagamento.bind("<<ComboboxSelected>>", atualizar_parcelas)
+
+    # Quantidade de parcelas (inicialmente desabilitado)
+    tk.Label(aba, text="Quantidade de Parcelas:").grid(row=4, column=0, sticky="e")
+    global combobox_parcelas
+    combobox_parcelas = ttk.Combobox(aba, values=[str(i) for i in range(1, 13)], state="disabled")
+    combobox_parcelas.grid(row=4, column=1, padx=5, pady=5)
+    combobox_parcelas.bind("<<ComboboxSelected>>", atualizar_valor_parcela)
+
+    # Label para mostrar o valor da parcela
+    global label_valor_parcela
+    label_valor_parcela = tk.Label(aba, text="Valor da Parcela: -", font=("Arial", 10))
+    label_valor_parcela.grid(row=5, columnspan=2, pady=5)
 
     # Produtos da venda
-    tk.Label(aba, text="Produtos (código e quantidade):").grid(row=4, column=0, sticky="e")
+    tk.Label(aba, text="Produtos (código e quantidade):").grid(row=6, column=0, sticky="e")
     global entry_venda_produtos
     entry_venda_produtos = ttk.Entry(aba)
-    entry_venda_produtos.grid(row=4, column=1, padx=5, pady=5)
+    entry_venda_produtos.grid(row=6, column=1, padx=5, pady=5)
 
-    ttk.Button(aba, text="Adicionar Produto", command=adicionar_produto_venda).grid(row=5, column=0, pady=10)
-    ttk.Button(aba, text="Registrar Venda", command=registrar_venda).grid(row=5, column=1, pady=10)
+    ttk.Button(aba, text="Adicionar Produto", command=adicionar_produto_venda).grid(row=7, column=0, pady=10)
+    ttk.Button(aba, text="Registrar Venda", command=registrar_venda).grid(row=7, column=1, pady=10)
 
     # Árvore para listar produtos
     global tree
     tree = ttk.Treeview(aba, columns=("Código", "Nome", "Quantidade", "Preço Unitário", "Total"), show="headings")
-    tree.grid(row=6, columnspan=2, pady=10)
+    tree.grid(row=8, columnspan=2, pady=10)
 
     tree.heading("Código", text="Código")
     tree.heading("Nome", text="Nome")
@@ -192,6 +234,8 @@ def interface_venda(aba):
     # Lista para armazenar os produtos da venda
     global lista_produtos
     lista_produtos = []
+
+
 
 def interface_estoque(aba):
     tk.Label(aba, text="Atualização de Estoque", font=("Arial", 12, "bold")).grid(row=0, columnspan=2, pady=(0, 10))
@@ -306,7 +350,7 @@ def adicionar_produto_venda():
 def registrar_venda():
     cliente_cod = entry_venda_cliente_cod.get()
     data = entry_venda_data.get()
-    tipo_pagamento = entry_venda_pagamento.get().lower()
+    tipo_pagamento = combobox_pagamento.get().lower()
 
     total = 0.0
     produtos_para_atualizar_estoque = []
@@ -358,7 +402,7 @@ def registrar_venda():
 def limpar_campos_venda():
     entry_venda_cliente_cod.delete(0, tk.END)
     entry_venda_data.delete(0, tk.END)
-    entry_venda_pagamento.delete(0, tk.END)
+    combobox_pagamento.delete(0, tk.END)
     lista_produtos.clear()
     
     for row in tree.get_children():
