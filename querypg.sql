@@ -42,6 +42,54 @@ insert into cliente values (
 	'67 97458475'
 );
 
+insert into cliente values (
+	3,
+	'Alex',
+	'67 992457481'
+);
+
+insert into cliente values (
+	4,
+	'Mariana',
+	'67 988245678'
+);
+
+insert into cliente values (
+	5,
+	'Carlos',
+	'67 988745678'
+);
+
+insert into cliente values (
+	6,
+	'Roberta',
+	'67 991234567'
+);
+
+insert into cliente values (
+	7,
+	'Fernanda',
+	'67 997654321'
+);
+
+insert into cliente values (
+	8,
+	'Paulo',
+	'67 996745231'
+);
+
+insert into cliente values (
+	9,
+	'Lucia',
+	'67 992345678'
+);
+
+insert into cliente values (
+	10,
+	'Felipe',
+	'67 991876543'
+);
+
 insert into produto values (
 	1,
 	'Arroz 5Kg',
@@ -54,4 +102,73 @@ insert into produto values (
 	'Feijao 1kg',
 	21.00,
 	41
+);
+insert into produto values (
+	3,
+	'Macarrao Espaguete 500g',
+	5.99,
+	120
+);
+
+insert into produto values (
+	4,
+	'Óleo de Soja 900ml',
+	6.49,
+	150
+);
+
+insert into produto values (
+	5,
+	'Leite UHT 1L',
+	4.30,
+	200
+);
+
+insert into produto values (
+	6,
+	'Papel Higiênico 12 Unidades',
+	18.90,
+	50
+);
+
+insert into produto values (
+	7,
+	'Detergente Líquido 500ml',
+	2.99,
+	80
+);
+
+insert into produto values (
+	8,
+	'Sabão em Pó 1kg',
+	7.45,
+	60
+);
+
+insert into produto values (
+	9,
+	'Biscoito Maizena 400g',
+	3.80,
+	150
+);
+
+insert into produto values (
+	10,
+	'Feijão Preto 1kg',
+	7.20,
+	120
+);
+
+insert into produto values (
+	11,
+	'Macarrão Instantâneo 85g',
+	1.80,
+	250
+);
+
+insert into produto values (
+	12,
+	'Abacaxi',
+	5.00,
+	30
 );
