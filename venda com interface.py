@@ -235,8 +235,6 @@ def interface_venda(aba):
     global lista_produtos
     lista_produtos = []
 
-
-
 def interface_estoque(aba):
     tk.Label(aba, text="Atualização de Estoque", font=("Arial", 12, "bold")).grid(row=0, columnspan=2, pady=(0, 10))
 
