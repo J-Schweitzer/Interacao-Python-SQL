@@ -4,7 +4,7 @@ from tkinter import ttk
 import psycopg2
 
 # Conexão com o banco de dados
-conn = psycopg2.connect(host='localhost', port='5433', database='Mercado', user='postgres', password='ucdb')
+conn = psycopg2.connect(host='localhost', port='5432', database='Mercado', user='postgres', password='---')
 
 def close_connection():
     conn.close()
