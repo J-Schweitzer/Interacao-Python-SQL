@@ -285,7 +285,7 @@ def exibir_relatorio_clientes():
     # Consultar dados do banco
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT COD, NOME, TELEFONE, TOTAL_COMPRAS FROM CLIENTE;")
+            cur.execute("SELECT COD, NOME, TELEFONE, TOTAL_COMPRAS FROM CLIENTE ORDER BY COD;")
             clientes = cur.fetchall()
             for cliente in clientes:
                 tree_relatorio.insert("", "end", values=cliente)
@@ -308,7 +308,7 @@ def exibir_relatorio_produtos():
     # Consultar dados do banco
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT COD, NOME, VALOR_UN, QTD_ESTQ FROM PRODUTO;")
+            cur.execute("SELECT COD, NOME, VALOR_UN, QTD_ESTQ FROM PRODUTO ORDER BY COD;")
             produtos = cur.fetchall()
             for produto in produtos:
                 tree_relatorio.insert("", "end", values=produto)
