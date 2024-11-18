@@ -175,7 +175,8 @@ def interface_venda(aba):
 
     def calcular_total_venda():
         """Calcula o total da venda com base nos produtos adicionados."""
-        return sum(item["total"] for item in lista_produtos)
+        return sum(item[4] for item in lista_produtos)  # item[4] é o 'total' de cada produto na tupla
+
 
     tk.Label(aba, text="Registro de Vendas", font=("Arial", 12, "bold")).grid(row=0, columnspan=2, pady=(0, 10))
 
